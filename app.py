@@ -74,5 +74,6 @@ if uploaded_files:
     st.success("Merging complete! Download your merged files.")
 else:
     st.info("Please upload .ris and .enw files to start merging.")
-  st.info("Created by Dr. Satyajeet Patil")
+
+st.info("Created by Dr. Satyajeet Patil")
 st.info("For more cool apps like this visit: https://patilsatyajeet.wixsite.com/home/python")
