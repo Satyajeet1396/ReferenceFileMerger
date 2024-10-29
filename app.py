@@ -76,11 +76,25 @@ if uploaded_files:
     st.success("Merging complete! Download your merged files.")
 else:
     st.info("Please upload .ris and .enw files to start merging.")
-# Replace 'path/to/serviceAccountKey.json' with the actual path to your JSON key file
-cred = credentials.Certificate("https://github.com/Satyajeet1396/Reference-File-Merger/blob/7f618e405739c42203b333aca390bec18f005ab5/reference-file-merger-firebase-adminsdk-eadi0-df414bf92d.json")
+# Load credentials from Streamlit secrets
+cred = credentials.Certificate({
+    "type": st.secrets["type"],
+    "project_id": st.secrets["project_id"],
+    "private_key_id": st.secrets["private_key_id"],
+    "private_key": st.secrets["private_key"].replace("\\n", "\n"),
+    "client_email": st.secrets["client_email"],
+    "client_id": st.secrets["client_id"],
+    "auth_uri": st.secrets["auth_uri"],
+    "token_uri": st.secrets["token_uri"],
+    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": st.secrets["client_x509_cert_url"],
+    "universe_domain": st.secrets["universe_domain"]
+})
+
+# Initialize Firebase app
 firebase_admin.initialize_app(cred)
 
-# Create a Firestore client to interact with Firestore database
+# Create Firestore client
 db = firestore.client()
 
 st.info("Created by Dr. Satyajeet Patil")
