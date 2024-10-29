@@ -15,23 +15,19 @@ def read_file(file_path):
 
 # Function to merge contents of multiple RIS and ENW files, avoiding duplicates
 def merge_files(uploaded_files):
-    # Initialize sets to store .ris and .enw file contents
     ris_contents = set()
     enw_contents = set()
 
-    # Process uploaded files
     for uploaded_file in uploaded_files:
         file_name = uploaded_file.name
+        file_content = uploaded_file.read().decode('utf-8')
         if file_name.endswith('.ris'):
-            file_content = uploaded_file.read().decode('utf-8')
-            ris_contents.add(file_content)
+            ris_contents.add(file_content.strip().lower())  # Normalize content
         elif file_name.endswith('.enw'):
-            file_content = uploaded_file.read().decode('utf-8')
-            enw_contents.add(file_content)
+            enw_contents.add(file_content.strip().lower())  # Normalize content
         else:
             st.warning(f"Skipping non-RIS/ENW file: {file_name}")
 
-    # Merge all .ris and .enw file contents into a single string
     merged_ris_content = '\n'.join(ris_contents)
     merged_enw_content = '\n'.join(enw_contents)
 
@@ -45,17 +41,14 @@ st.write("Upload .ris and .enw files to merge them into single output files with
 uploaded_files = st.file_uploader("Upload .ris and .enw files", type=['ris', 'enw'], accept_multiple_files=True)
 
 if uploaded_files:
-    # Perform merging
     merged_ris_content, merged_enw_content = merge_files(uploaded_files)
 
-    # Save merged content to in-memory files
     merged_ris = BytesIO()
     merged_enw = BytesIO()
 
     merged_ris.write(merged_ris_content.encode('utf-8'))
     merged_enw.write(merged_enw_content.encode('utf-8'))
 
-    # Prepare files for download
     merged_ris.seek(0)
     merged_enw.seek(0)
 
@@ -76,6 +69,7 @@ if uploaded_files:
     st.success("Merging complete! Download your merged files.")
 else:
     st.info("Please upload .ris and .enw files to start merging.")
+
 # Load credentials from Streamlit secrets
 cred = credentials.Certificate({
     "type": st.secrets["type"],
