@@ -1,8 +1,6 @@
 import streamlit as st
 import os
 from io import BytesIO
-import firebase_admin
-from firebase_admin import credentials, firestore
 
 # Function to read the contents of a single file
 def read_file(file_path):
@@ -69,27 +67,6 @@ if uploaded_files:
     st.success("Merging complete! Download your merged files.")
 else:
     st.info("Please upload .ris and .enw files to start merging.")
-
-# Load credentials from Streamlit secrets
-cred = credentials.Certificate({
-    "type": st.secrets["type"],
-    "project_id": st.secrets["project_id"],
-    "private_key_id": st.secrets["private_key_id"],
-    "private_key": st.secrets["private_key"].replace("\\n", "\n"),
-    "client_email": st.secrets["client_email"],
-    "client_id": st.secrets["client_id"],
-    "auth_uri": st.secrets["auth_uri"],
-    "token_uri": st.secrets["token_uri"],
-    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-    "client_x509_cert_url": st.secrets["client_x509_cert_url"],
-    "universe_domain": st.secrets["universe_domain"]
-})
-
-# Initialize Firebase app
-firebase_admin.initialize_app(cred)
-
-# Create Firestore client
-db = firestore.client()
 
 st.info("Created by Dr. Satyajeet Patil")
 st.info("For more cool apps like this visit: https://patilsatyajeet.wixsite.com/home/python")
