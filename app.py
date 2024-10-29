@@ -1,6 +1,8 @@
 import streamlit as st
 import os
 from io import BytesIO
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 # Function to read the contents of a single file
 def read_file(file_path):
@@ -74,6 +76,12 @@ if uploaded_files:
     st.success("Merging complete! Download your merged files.")
 else:
     st.info("Please upload .ris and .enw files to start merging.")
+# Replace 'path/to/serviceAccountKey.json' with the actual path to your JSON key file
+cred = credentials.Certificate("https://github.com/Satyajeet1396/Reference-File-Merger/blob/7f618e405739c42203b333aca390bec18f005ab5/reference-file-merger-firebase-adminsdk-eadi0-df414bf92d.json")
+firebase_admin.initialize_app(cred)
+
+# Create a Firestore client to interact with Firestore database
+db = firestore.client()
 
 st.info("Created by Dr. Satyajeet Patil")
 st.info("For more cool apps like this visit: https://patilsatyajeet.wixsite.com/home/python")
