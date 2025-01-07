@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from io import BytesIO
 import qrcode
 import base64
@@ -22,14 +21,15 @@ def merge_files(uploaded_files):
         file_name = uploaded_file.name
         file_content = uploaded_file.read().decode('utf-8')
         if file_name.endswith('.ris'):
-            ris_contents.add(file_content.strip().lower())  # Normalize content
+            ris_contents.add(file_content)  # Preserve original content
         elif file_name.endswith('.enw'):
-            enw_contents.add(file_content.strip().lower())  # Normalize content
+            enw_contents.add(file_content)  # Preserve original content
         else:
             st.warning(f"Skipping non-RIS/ENW file: {file_name}")
 
-    merged_ris_content = '\n'.join(ris_contents)
-    merged_enw_content = '\n'.join(enw_contents)
+    # Join contents exactly as they were in the input
+    merged_ris_content = ''.join(ris_contents)
+    merged_enw_content = ''.join(enw_contents)
 
     return merged_ris_content, merged_enw_content
 
@@ -43,6 +43,7 @@ uploaded_files = st.file_uploader("Upload .ris and .enw files", type=['ris', 'en
 if uploaded_files:
     merged_ris_content, merged_enw_content = merge_files(uploaded_files)
 
+    # Save merged contents to in-memory files
     merged_ris = BytesIO()
     merged_enw = BytesIO()
 
@@ -52,6 +53,7 @@ if uploaded_files:
     merged_ris.seek(0)
     merged_enw.seek(0)
 
+    # Provide download buttons for the merged files
     st.download_button(
         label="Download Merged RIS File",
         data=merged_ris,
@@ -109,5 +111,5 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True
-    )
+)
 st.info("A small donation from you can fuel our research journey, turning ideas into breakthroughs that can change lives!")
